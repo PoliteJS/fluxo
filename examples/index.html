@@ -5,11 +5,67 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>marcopeg/Fluxo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ReactJS from CDN -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+
+    <!-- Fluxo (last build) -->
+    <script src="../build/fluxo.js"></script>    
+
+
 </head>
 <body>
-<script src="../build/fluxo.js"></script>
-<script>
-Fluxo();
-</script>
+
+    <div id="example"></div>
+
+    <script type="text/jsx">
+
+        /**
+         * This is a Flux's Store
+         * it is responsible to hold a data state and to 
+         * implement actions that modify that state.
+         */
+        var clockStore = Fluxo.createStore(true, {
+            initialState: {
+                now: new Date(),
+                mode: true
+            },
+            actions: ['changeMode'],
+            onChangeMode: function() {
+                this.setState('mode', !this.state.mode);
+            }
+        });
+
+        /**
+         * This is a Flux's ControllerView
+         * it's state is updated by the clockStore.
+         */
+        var ClockView = React.createClass({
+            mixins: [clockStore.mixin()],
+            changeClockMode: function() {
+                this.store.triggerAction('changeMode');
+            },
+            render: function() {
+                return (
+                    <div>
+                        <div>{this.state.now.toString()}</div>
+                        <button onClick={this.changeClockMode}>change</button>
+                    </div>
+                );
+            }
+        });
+
+        React.render(
+            <ClockView />,
+            document.getElementById('example')
+        );
+
+        // run the clock!
+        setInterval(function() {
+            clockStore.setState('now', new Date());
+        }, 100);
+
+    </script>
 </body>
 </html>
