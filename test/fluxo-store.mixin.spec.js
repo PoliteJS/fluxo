@@ -37,10 +37,7 @@ describe('FluxoStore // setState()', function() {
         });
 
         var target = document.createElement('div');
-        React.render(
-            React.createElement(Element),
-            target
-        );
+        React.render(React.createElement(Element), target);
 
         store.setState('name', 'Silvia');
         expect(target.innerHTML).to.contain('Silvia');

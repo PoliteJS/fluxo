@@ -18,6 +18,7 @@ exports.createStore = function(makeInstance, customApi) {
     };
 
     CustomStore.prototype = {
+        mixin: createStoreMixin.bind(null, store),
         dispose: function() {
             store.dispose();
         },
@@ -27,7 +28,9 @@ exports.createStore = function(makeInstance, customApi) {
         setState: function() {
             store.setState.apply(store, arguments);
         },
-        mixin: createStoreMixin.bind(null, store)
+        triggerAction: function() {
+            store.triggerAction.apply(store, arguments);  
+        }
     };
 
     if (true === makeInstance) {

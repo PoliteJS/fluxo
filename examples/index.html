@@ -31,7 +31,7 @@
                 now: new Date(),
                 mode: true
             },
-            actions: ['changeMode'],
+            actions: ['changeMode', 'reset-clock'],
             onChangeMode: function() {
                 this.setState('mode', !this.state.mode);
             }
@@ -47,9 +47,10 @@
                 this.store.triggerAction('changeMode');
             },
             render: function() {
+                var display = this.state.mode ? this.state.now.toString() : this.state.now.getTime();
                 return (
                     <div>
-                        <div>{this.state.now.toString()}</div>
+                        <div>{display}</div>
                         <button onClick={this.changeClockMode}>change</button>
                     </div>
                 );
