@@ -1,0 +1,58 @@
+{
+  "name": "fluxo",
+  "version": "0.0.0",
+  "description": "micro but extensible Flux implementation",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/gulp/bin/gulp.js build",
+    "dist": "./node_modules/gulp/bin/gulp.js dist",
+    "start": "./node_modules/gulp/bin/gulp.js start",
+    "test": "./node_modules/gulp/bin/gulp.js test",
+    "ci": "./node_modules/gulp/bin/gulp.js ci",
+    "karma-start": "./node_modules/gulp/bin/gulp.js karma-start",
+    "karma-run": "./node_modules/gulp/bin/gulp.js karma-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcopeg/fluxo.git"
+  },
+  "keywords": [
+    "flux",
+    "reactjs",
+    "action",
+    "store",
+    "emitter",
+    "component"
+  ],
+  "author": "Marco Pegoraro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marcopeg/fluxo/issues"
+  },
+  "homepage": "https://github.com/marcopeg/fluxo",
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.9.2",
+    "gulp-webpack-build": "^0.4.1",
+    "istanbul": "^0.3.6",
+    "istanbul-instrumenter-loader": "^0.1.2",
+    "jshint-stylish": "^1.0.0",
+    "karma": "^0.12.31",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-coverage": "^0.2.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.10",
+    "karma-opera-launcher": "^0.1.0",
+    "karma-osx-reporter": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-safari-launcher": "^0.1.1",
+    "karma-sinon": "^1.0.4",
+    "karma-webpack": "^1.5.0",
+    "mocha": "^2.1.0",
+    "run-sequence": "^1.0.2",
+    "sinon": "^1.12.2",
+    "webpack": "^1.5.3"
+  }
+}
