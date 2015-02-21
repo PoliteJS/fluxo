@@ -2,6 +2,7 @@
 'use strict';
 
 var subscribable = require('jqb-subscribable');
+var actionsUtils = require('./actions');
 
 module.exports = FluxoStore;
 
@@ -14,8 +15,8 @@ function FluxoStore(customApi) {
 
 FluxoStore.prototype.init = function() {
     this.emitter = subscribable.create();
-    this.actions = initActions(this, this.customApi.actions);
-    registerActionHandlers(this, this.customApi);
+    this.actions = actionsUtils.init(this, this.customApi.actions);
+    actionsUtils.register(this, this.customApi);
     this.customApi.init && this.customApi.init.apply(this, arguments);
     return this;
 };
@@ -31,14 +32,18 @@ FluxoStore.prototype.getState = function() {
 };
 
 FluxoStore.prototype.setState = function(prop, val) {
-    var newState;
+    var change, key;
+    var oldState = this.state;
     if ('string' === typeof prop) {
-        newState = {};
-        newState[prop] = val;
+        change = {};
+        change[prop] = val;
     } else {
-        newState = prop || {};
+        change = prop || {};
     }
-    setState(this, newState);
+    for (key in change) {
+        this.state[key] = change[key];
+    }
+    this.emitter.emit('state-changed', this.state, oldState, change);
     return this;
 };
 
@@ -69,62 +74,4 @@ function buildState(initialState) {
     } else {
         return initialState || {};
     }
-}
-
-function setState(store, state) {
-    var key;
-    for (key in state) {
-        store.state[key] = state[key];
-    }
-    store.emitter.emit('state-changed', store.state);
-}
-
-
-
-
-function initActions(store, configuredActions) {
-    var implementedActions = {};
-    (configuredActions || []).forEach(function(action) {
-        action = initAction(store, action);
-        implementedActions[action.name] = action.impl;
-    });
-    return implementedActions;
-}
-
-function initAction(store, action) {
-    if ('string' === typeof action) {
-        action = {name:action};
-    }
-    action.impl = action.impl || function() {
-        this.fire.apply(this, arguments);
-    };
-    action.impl = action.impl.bind({
-        store: store,
-        actionName: action.name,
-        fire: defaultAction.bind({
-            store: store,
-            actionName: action.name,
-        })
-    });
-    return action;
-}
-
-function defaultAction() {
-    var args = [this.actionName].concat(Array.prototype.slice.call(arguments));
-    this.store.emitter.emit.apply(this.store.emitter, args);            
-}
-
-function registerActionHandlers(store, customApi) {
-    Object.keys(store.actions).forEach(function(actionName) {
-        var handlerName = camelCase('on-' + actionName);
-        if (customApi[handlerName]) {
-            store.emitter.on('^' + actionName + '$', customApi[handlerName].bind(store));
-        }
-    });
-}
-
-function camelCase(input) { 
-    return input.replace(/-(.)/g, function(match, group1) {
-        return group1.toUpperCase();
-    });
 }

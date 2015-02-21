@@ -1,6 +1,6 @@
 {
   "name": "fluxo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "micro but extensible Flux implementation",
   "main": "index.js",
   "scripts": {
