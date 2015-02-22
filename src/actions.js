@@ -2,7 +2,7 @@
 'use strict';
 
 module.exports = {
-    init: function(store, configuredActions) {
+    build: function(store, configuredActions) {
         var implementedActions = {};
         (configuredActions || []).forEach(function(action) {
             action = initAction(store, action);

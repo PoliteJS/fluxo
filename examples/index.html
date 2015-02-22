@@ -21,6 +21,8 @@
 
     <script type="text/jsx">
 
+        var FooMixin = {};
+
         /**
          * This is a Flux's Store
          * it is responsible to hold a data state and to 
@@ -32,6 +34,7 @@
                 mode: true
             },
             actions: ['changeMode'],
+            mixins: [FooMixin],
             onChangeMode: function() {
                 this.setState('mode', !this.state.mode);
             }

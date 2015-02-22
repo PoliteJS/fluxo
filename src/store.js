@@ -3,6 +3,7 @@
 
 var subscribable = require('jqb-subscribable');
 var actionsUtils = require('./actions');
+var mixinsUtils = require('./mixins');
 var exceptions = require('./exceptions');
 
 module.exports = FluxoStore;
@@ -11,13 +12,14 @@ function FluxoStore(customApi) {
     this.customApi = buildCustomApi(customApi);
     this.state = buildState(this.customApi.initialState);
     this.emitter;
-    this.actions;
+    this.actions = actionsUtils.build(this, this.customApi.actions);
+    this.mixins = mixinsUtils.build(this, this.customApi.mixins);
 }
 
 FluxoStore.prototype.init = function() {
     this.emitter = subscribable.create();
-    this.actions = actionsUtils.init(this, this.customApi.actions);
     actionsUtils.register(this, this.customApi);
+    mixinsUtils.run(this, 'init');
     this.customApi.init && this.customApi.init.apply(this, arguments);
     return this;
 };

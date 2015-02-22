@@ -1,3 +1,7 @@
+/**
+ * This is the mixin to add to a ControllerView to fully integrate
+ * with a Fluxo store instance.
+ */
 
 'use strict';
 
