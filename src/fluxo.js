@@ -11,25 +11,27 @@ exports.createStore = function(makeInstance, customApi) {
         makeInstance = false;
     }
 
-    var store = new FluxoStore(customApi);
-
     var CustomStore = function() {
-        store.init.apply(store, arguments);
+        this.store = new FluxoStore(customApi);
+        this.mixin = createStoreMixin.bind(null, this.store);
+        this.store.init.apply(this.store, arguments);
     };
 
     CustomStore.prototype = {
-        mixin: createStoreMixin.bind(null, store),
         dispose: function() {
-            store.dispose();
+            this.store.dispose();
         },
         getState: function() {
-            return store.getState();
+            return this.store.getState();
         },
         setState: function() {
-            store.setState.apply(store, arguments);
+            this.store.setState.apply(this.store, arguments);
         },
         triggerAction: function() {
-            store.triggerAction.apply(store, arguments);  
+            this.store.triggerAction.apply(this.store, arguments);  
+        },
+        registerControllerView: function(view) {
+            this.store.registerControllerView(view);
         }
     };
 

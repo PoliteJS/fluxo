@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>marcopeg/Fluxo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ReactJS from CDN -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+
+    <!-- Fluxo (last build) -->
+    <script src="../build/fluxo.js"></script>    
+
+
+</head>
+<body>
+
+    <div id="chat1"></div>
+    <hr>
+    <div id="chat2"></div>
+
+    <script type="text/jsx">
+
+        // singleton store instance
+        var chatStore = Fluxo.createStore(true, {
+            initialState: {
+                messages: ['hello', 'world']
+            },
+            actions: ['push'],
+            onPush: function(msg) {
+                var messages = this.state.messages;
+                messages.push(msg);
+                this.setState('messages', messages);
+            }
+        });
+
+        // all Chat component instances will share the very same store
+        var Chat = React.createClass({
+            mixins: [chatStore.mixin()],
+            sendMsg: function() {
+                var node = this.refs['msg'].getDOMNode();
+                this.store.triggerAction('push', node.value);
+                node.value = '';
+            },
+            render: function() {
+                var messages = this.state.messages.map(function(msg, key) {
+                    return <li key={key}>{msg}</li>;
+                });
+                return (
+                    <div>
+                        <ul>{messages}</ul>
+                        <input ref="msg" />
+                        <button onClick={this.sendMsg}>Send</button>
+                    </div>
+                );
+            }
+        });
+
+        React.render(
+            <Chat />,
+            document.getElementById('chat1')
+        );
+
+        React.render(
+            <Chat />,
+            document.getElementById('chat2')
+        );
+
+    </script>
+</body>
+</html>

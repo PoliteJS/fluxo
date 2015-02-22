@@ -1,6 +1,5 @@
 
 'use strict';
-
 var subscribable = require('jqb-subscribable');
 var actionsUtils = require('./actions');
 var mixinsUtils = require('./mixins');
@@ -25,8 +24,9 @@ FluxoStore.prototype.init = function() {
 };
 
 FluxoStore.prototype.dispose = function() {
-    this.emitter.dispose();
+    mixinsUtils.run(this, 'dispose');
     this.customApi.dispose && this.customApi.dispose.apply(this, arguments);
+    this.emitter.dispose();
     return this;
 };
 
@@ -35,13 +35,16 @@ FluxoStore.prototype.getState = function() {
 };
 
 FluxoStore.prototype.setState = function(prop, val) {
-    var change, key;
+    var change, key, shouldChange;
     var oldState = this.state;
     if ('string' === typeof prop) {
         change = {};
         change[prop] = val;
     } else {
         change = prop || {};
+    }
+    if (false === mixinsUtils.run(this, 'beforeStateChange', change)) {
+        return this;
     }
     for (key in change) {
         this.state[key] = change[key];
@@ -51,6 +54,7 @@ FluxoStore.prototype.setState = function(prop, val) {
 };
 
 FluxoStore.prototype.registerControllerView = function(controllerView) {
+    controllerView.setState(this.getState());
     this.emitter.on('^state-changed$', function(newState) {
         controllerView.setState(newState);
     });
@@ -77,4 +81,5 @@ function buildState(initialState) {
     } else {
         return initialState || {};
     }
+    return initialState;
 }

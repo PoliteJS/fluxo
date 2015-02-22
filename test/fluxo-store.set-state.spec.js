@@ -27,4 +27,30 @@ describe('FluxoStore // setState()', function() {
         expect(store.getState()).to.deep.equal(newState);
     });
 
+    it('should be aborted via mixin', function() {
+        var store = Fluxo.createStore(true, {
+            initialState: {a:1},
+            mixins: [{
+                beforeStateChange: function() {
+                    this.setResult(false);
+                }
+            }]
+        });
+        store.setState({a:2});
+        expect(store.getState()).to.deep.equal({a:1});
+    });
+
+    it('should modify the change via mixin', function() {
+        var store = Fluxo.createStore(true, {
+            initialState: {a:1},
+            mixins: [{
+                beforeStateChange: function(change) {
+                    change.foo = 123;
+                }
+            }]
+        });
+        store.setState({a:2});
+        expect(store.getState()).to.have.property('foo').that.equals(123);
+    });
+
 });

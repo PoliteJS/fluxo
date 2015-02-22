@@ -21,8 +21,6 @@
 
     <script type="text/jsx">
 
-        var FooMixin = {};
-
         /**
          * This is a Flux's Store
          * it is responsible to hold a data state and to 
@@ -33,10 +31,15 @@
                 now: new Date(),
                 mode: true
             },
-            actions: ['changeMode'],
-            mixins: [FooMixin],
+            actions: [
+                'changeMode',
+                'refreshClock'
+            ],
             onChangeMode: function() {
                 this.setState('mode', !this.state.mode);
+            },
+            onRefreshClock: function() {
+                this.setState('now', new Date());
             }
         });
 
@@ -46,15 +49,22 @@
          */
         var ClockView = React.createClass({
             mixins: [clockStore.mixin()],
-            changeClockMode: function() {
+            changeMode: function() {
                 clockStore.triggerAction('changeMode');
             },
             render: function() {
-                var display = this.state.mode ? this.state.now.toString() : this.state.now.getTime();
+                var display;
+
+                if (this.state.mode) {
+                    display = this.state.now.toString();
+                } else {
+                    display = this.state.now.getTime();
+                }
+
                 return (
                     <div>
-                        <div>{display}</div>
-                        <button onClick={this.changeClockMode}>change</button>
+                        <p>{display}</p>
+                        <button onClick={this.changeMode}>change</button>
                     </div>
                 );
             }
@@ -67,7 +77,7 @@
 
         // run the clock!
         setInterval(function() {
-            clockStore.setState('now', new Date());
+            clockStore.triggerAction('refreshClock');
         }, 10);
 
     </script>

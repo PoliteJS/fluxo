@@ -14,7 +14,21 @@ function buildMixins(store, mixins) {
 }
 
 function run(store, hook) {
+    var result;
+    var args = Array.prototype.slice.call(arguments, 2);
+    var ctx = {
+        store: store,
+        setResult: function(val) {
+            result = val;
+        },
+        setNextArgs: function() {
+            args = Array.prototype.slice.call(arguments);
+        }
+    };
     store.mixins.forEach(function(mixin) {
-        mixin[hook] && mixin[hook].call(store);
+        if (undefined === result && mixin[hook]) {
+            mixin[hook].apply(ctx, args);
+        }
     });
+    return result;
 }
