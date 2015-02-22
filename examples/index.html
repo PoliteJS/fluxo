@@ -31,7 +31,7 @@
                 now: new Date(),
                 mode: true
             },
-            actions: ['changeMode', 'reset-clock'],
+            actions: ['changeMode'],
             onChangeMode: function() {
                 this.setState('mode', !this.state.mode);
             }
@@ -44,7 +44,7 @@
         var ClockView = React.createClass({
             mixins: [clockStore.mixin()],
             changeClockMode: function() {
-                this.store.triggerAction('changeMode');
+                clockStore.triggerAction('changeMode');
             },
             render: function() {
                 var display = this.state.mode ? this.state.now.toString() : this.state.now.getTime();
@@ -65,7 +65,7 @@
         // run the clock!
         setInterval(function() {
             clockStore.setState('now', new Date());
-        }, 100);
+        }, 10);
 
     </script>
 </body>

@@ -2,18 +2,23 @@
 'use strict';
 
 module.exports = {
-    init: initActions,
-    register: registerActionHandlers
+    init: function(store, configuredActions) {
+        var implementedActions = {};
+        (configuredActions || []).forEach(function(action) {
+            action = initAction(store, action);
+            implementedActions[action.name] = action.impl;
+        });
+        return implementedActions;
+    },
+    register: function(store, customApi) {
+        Object.keys(store.actions).forEach(function(actionName) {
+            var handlerName = camelCase('on-' + actionName);
+            if (customApi[handlerName]) {
+                store.emitter.on('^' + actionName + '$', customApi[handlerName].bind(store));
+            }
+        });
+    }
 };
-
-function initActions(store, configuredActions) {
-    var implementedActions = {};
-    (configuredActions || []).forEach(function(action) {
-        action = initAction(store, action);
-        implementedActions[action.name] = action.impl;
-    });
-    return implementedActions;
-}
 
 function initAction(store, action) {
     if ('string' === typeof action) {
@@ -36,15 +41,6 @@ function initAction(store, action) {
 function defaultAction() {
     var args = [this.actionName].concat(Array.prototype.slice.call(arguments));
     this.store.emitter.emit.apply(this.store.emitter, args);            
-}
-
-function registerActionHandlers(store, customApi) {
-    Object.keys(store.actions).forEach(function(actionName) {
-        var handlerName = camelCase('on-' + actionName);
-        if (customApi[handlerName]) {
-            store.emitter.on('^' + actionName + '$', customApi[handlerName].bind(store));
-        }
-    });
 }
 
 function camelCase(input) { 

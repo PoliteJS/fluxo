@@ -3,6 +3,7 @@
 
 var subscribable = require('jqb-subscribable');
 var actionsUtils = require('./actions');
+var exceptions = require('./exceptions');
 
 module.exports = FluxoStore;
 
@@ -58,7 +59,7 @@ FluxoStore.prototype.triggerAction = function(actionName) {
     if (this.actions[actionName]) {
         return this.actions[actionName].apply(this, args);
     } else {
-        throw 'action "' + actionName + '" not implemented by this store';
+        throw new exceptions.ActionNotImplemented(actionName);
     }
 };
 
