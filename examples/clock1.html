@@ -50,7 +50,7 @@
         var ClockView = React.createClass({
             mixins: [clockStore.mixin()],
             changeMode: function() {
-                clockStore.triggerAction('changeMode');
+                this.store.trigger('changeMode');
             },
             render: function() {
                 var display;
@@ -77,7 +77,7 @@
 
         // run the clock!
         setInterval(function() {
-            clockStore.triggerAction('refreshClock');
+            clockStore.trigger('refreshClock');
         }, 10);
 
     </script>

@@ -25,10 +25,11 @@ exports.createStore = function(makeInstance, customApi) {
             return this.store.getState.apply(this.store, arguments);
         },
         setState: function() {
+            console.warn('this is going to be thrown away very soon!');
             this.store.setState.apply(this.store, arguments);
         },
-        triggerAction: function() {
-            this.store.triggerAction.apply(this.store, arguments);  
+        trigger: function() {
+            this.store.trigger.apply(this.store, arguments);  
         },
         registerControllerView: function(view) {
             this.store.registerControllerView(view);

@@ -42,12 +42,12 @@
             ],
             init: function() {
                 if (this.getState('isRunning')) {
-                    this.triggerAction('startClock');
+                    this.trigger('startClock');
                 }
             },
             onStartClock: function() {
-                this.__timer = setInterval(this.triggerAction.bind(this, 'refreshClock'), 10);
-                this.triggerAction('refreshClock');
+                this.__timer = setInterval(this.trigger.bind(this, 'refreshClock'), 10);
+                this.trigger('refreshClock');
                 this.setState('isRunning', true);
             },
             onStopClock: function() {
@@ -68,7 +68,7 @@
         var ClockView = React.createClass({
             mixins: [clockStore.mixin()],
             changeMode: function() {
-                clockStore.triggerAction('changeMode');
+                clockStore.trigger('changeMode');
             },
             render: function() {
                 var display;
@@ -96,9 +96,9 @@
             mixins: [clockStore.mixin()],
             startStop: function() {
                 if (this.state.isRunning) {
-                    this.store.triggerAction('stopClock');
+                    this.store.trigger('stopClock');
                 } else {
-                    this.store.triggerAction('startClock');
+                    this.store.trigger('startClock');
                 }
             },
             render: function() {

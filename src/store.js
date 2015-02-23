@@ -76,7 +76,7 @@ FluxoStore.prototype.registerControllerView = function(controllerView) {
     });
 };
 
-FluxoStore.prototype.triggerAction = function(actionName) {
+FluxoStore.prototype.trigger = function(actionName) {
     var args = Array.prototype.slice.call(arguments, 1);
     if (this.actions[actionName]) {
         return this.actions[actionName].apply(this, args);

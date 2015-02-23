@@ -48,7 +48,7 @@
             },
             sendMsg: function() {
                 var msgText = this.refs['msg'].getDOMNode().value;
-                this.props.store.triggerAction('push', msgText);
+                this.props.store.trigger('push', msgText);
             },
             render: function() {
                 var messages = this.state.messages.map(function(msg, key) {

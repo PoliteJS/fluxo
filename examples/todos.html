@@ -44,10 +44,10 @@
             mixins: [todosStore.mixin()],
             addTodo: function() {
                 var node = this.refs['msg'].getDOMNode();
-                this.store.triggerAction('addTodo', node.value);
+                this.store.trigger('addTodo', node.value);
             },
             clearTodos: function() {
-                this.store.triggerAction('clearList');
+                this.store.trigger('clearList');
             },
             render: function() {
                 var todos = this.state.items.map(function(todo, key) {

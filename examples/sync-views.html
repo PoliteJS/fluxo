@@ -41,7 +41,7 @@
             mixins: [chatStore.mixin()],
             sendMsg: function() {
                 var node = this.refs['msg'].getDOMNode();
-                this.store.triggerAction('push', node.value);
+                this.store.trigger('push', node.value);
                 node.value = '';
             },
             render: function() {

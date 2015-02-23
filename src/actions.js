@@ -6,7 +6,7 @@ module.exports = {
         var implementedActions = {};
         (configuredActions || []).forEach(function(action) {
             action = initAction(store, action);
-            implementedActions[action.name] = action.impl;
+            implementedActions[action.name] = action.fn;
         });
         return implementedActions;
     },
@@ -24,23 +24,20 @@ function initAction(store, action) {
     if ('string' === typeof action) {
         action = {name:action};
     }
-    action.impl = action.impl || function() {
-        this.fire.apply(this, arguments);
-    };
-    action.impl = action.impl.bind({
-        store: store,
-        actionName: action.name,
-        fire: defaultAction.bind({
-            store: store,
-            actionName: action.name,
-        })
-    });
-    return action;
-}
 
-function defaultAction() {
-    var args = [this.actionName].concat(Array.prototype.slice.call(arguments));
-    this.store.emitter.emit.apply(this.store.emitter, args);            
+    action.store = store;
+    
+    action.fn = function() {
+        var args = Array.prototype.slice.call(arguments);
+
+        // fire a custom action
+        action.action && action.action.apply(action, args);
+
+        // fallback to the default action
+        store.emitter.emit.apply(store.emitter, [action.name].concat(args));            
+    };
+    
+    return action;
 }
 
 function camelCase(input) { 
