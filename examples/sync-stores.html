@@ -54,7 +54,7 @@
                 };
             },
             onPush: function(msg) {
-                var messages = Array.prototype.slice.call(this.state.messages);
+                var messages = this.getState('messages');
                 messages.push(msg);
                 this.setState('messages', messages);
             }

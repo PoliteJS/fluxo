@@ -1,6 +1,6 @@
 {
   "name": "fluxo",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "micro but extensible Flux implementation",
   "main": "index.js",
   "scripts": {
@@ -58,6 +58,7 @@
     "webpack": "^1.5.3"
   },
   "dependencies": {
+    "clone": "^1.0.0",
     "jqb-subscribable": "0.0.0"
   }
 }

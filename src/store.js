@@ -1,5 +1,6 @@
 
 'use strict';
+var clone = require('clone');
 var subscribable = require('jqb-subscribable');
 var actionsUtils = require('./actions');
 var mixinsUtils = require('./mixins');
@@ -30,8 +31,12 @@ FluxoStore.prototype.dispose = function() {
     return this;
 };
 
-FluxoStore.prototype.getState = function() {
-    return this.state;
+FluxoStore.prototype.getState = function(key) {
+    if (key) {
+        return clone(this.state[key]);
+    } else {
+        return clone(this.state);
+    }
 };
 
 FluxoStore.prototype.setState = function(prop, val) {
@@ -47,7 +52,7 @@ FluxoStore.prototype.setState = function(prop, val) {
     if (false === mixinsUtils.run(this, 'beforeStateChange', props)) {
         return this;
     }
-    
+
     changes = {};
     for (key in props) {
         if (props[key] !== this.state[key]) {
@@ -92,5 +97,4 @@ function buildState(initialState) {
     } else {
         return initialState || {};
     }
-    return initialState;
 }

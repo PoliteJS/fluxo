@@ -30,7 +30,7 @@
             },
             actions: ['push'],
             onPush: function(msg) {
-                var messages = this.state.messages;
+                var messages = this.getState('messages');
                 messages.push(msg);
                 this.setState('messages', messages);
             }

@@ -22,7 +22,7 @@ exports.createStore = function(makeInstance, customApi) {
             this.store.dispose();
         },
         getState: function() {
-            return this.store.getState();
+            return this.store.getState.apply(this.store, arguments);
         },
         setState: function() {
             this.store.setState.apply(this.store, arguments);
