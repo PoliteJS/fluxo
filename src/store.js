@@ -35,21 +35,32 @@ FluxoStore.prototype.getState = function() {
 };
 
 FluxoStore.prototype.setState = function(prop, val) {
-    var change, key, shouldChange;
-    var oldState = this.state;
+    var props, changes, key, shouldChange, hadChanged;
+    
     if ('string' === typeof prop) {
-        change = {};
-        change[prop] = val;
+        props = {};
+        props[prop] = val;
     } else {
-        change = prop || {};
+        props = prop || {};
     }
-    if (false === mixinsUtils.run(this, 'beforeStateChange', change)) {
+
+    if (false === mixinsUtils.run(this, 'beforeStateChange', props)) {
         return this;
     }
-    for (key in change) {
-        this.state[key] = change[key];
+    
+    changes = {};
+    for (key in props) {
+        if (props[key] !== this.state[key]) {
+            this.state[key] = props[key];
+            changes[key] = props[key];
+            hadChanged = true;
+        }
     }
-    this.emitter.emit('state-changed', this.state, oldState, change);
+
+    if (hadChanged) {
+        return this.emitter.emit('state-changed', this.state, changes, props);
+    }
+
     return this;
 };
 

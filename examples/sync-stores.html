@@ -23,6 +23,9 @@
 
     <script type="text/jsx">
 
+        // this mixin fakes a sync capable data storage.
+        // it keeps track of all the stores that use this plugin and
+        // worward each state updates to the others
         var chatDataMixin = function() {
             var messages = [];
             var stores = [];
@@ -33,13 +36,15 @@
                     store.emitter.on('state-changed', function(state) {
                         state.messages = state.messages;
                         stores.forEach(function(_store) {
-                            store.setState('messages', state.messages);
+                            _store.setState('messages', state.messages);
                         });
                     });
                 }
             };
         };
 
+        // This is a Store object. It needs to be initialised later on to
+        // represent a specific state which can be 
         var ChatStore = Fluxo.createStore({
             mixins: [chatDataMixin()],
             actions: ['push'],
@@ -49,7 +54,7 @@
                 };
             },
             onPush: function(msg) {
-                var messages = this.state.messages;
+                var messages = Array.prototype.slice.call(this.state.messages);
                 messages.push(msg);
                 this.setState('messages', messages);
             }

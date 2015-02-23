@@ -53,4 +53,37 @@ describe('FluxoStore // setState()', function() {
         expect(store.getState()).to.have.property('foo').that.equals(123);
     });
 
+    it('should not affect an unmodified property', function() {
+        var store = Fluxo.createStore(true, {
+            initialState: {a:1},
+        });
+        var spy = sinon.spy();
+        store.registerControllerView({
+            setState: spy
+        });
+        store.setState('a',1);
+        expect(spy.calledOnce).to.be.true;
+    });
+
+    it('should compute the real required changes', function() {
+        var spy = sinon.spy();
+        var store = Fluxo.createStore(true, {
+            initialState: {a:1},
+            init: function() {
+                this.emitter.on('state-changed', spy);
+            }
+        });
+        
+        store.setState({'a':1,'b':2});
+
+        expect(
+            spy.withArgs(
+                {'a':1,'b':2},      // new state
+                {'b':2},            // properties that had changed
+                {'a':1,'b':2}       // change request
+            ).calledOnce
+        ).to.be.true;
+
+    });
+
 });
