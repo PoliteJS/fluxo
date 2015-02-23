@@ -42,7 +42,7 @@ Why don't try it out with the obiquitous TodoList example?
       mixins: [todosStore.mixin()],
       addTodo: function() {
         var node = this.refs['msg'].getDOMNode();
-        this.store.triggerAction('addTodo', node.value);
+        this.store.trigger('addTodo', node.value);
         node.value = '';
       },
       render: function() {
