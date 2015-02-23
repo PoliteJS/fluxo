@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>marcopeg/Fluxo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ReactJS from CDN -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+
+    <!-- Fluxo (last build) -->
+    <script src="../build/fluxo.js"></script>    
+
+
+</head>
+<body>
+
+    <div id="todos"></div>
+
+    <script>
+        // singleton Todos store instance
+        var todosStore = Fluxo.createStore(true, {
+            initialState: {
+                items: ['buy milk', 'call mom']
+            },
+            actions: [
+                'addTodo',
+                'clearList'
+            ],
+            onAddTodo: function(todo) {
+                var items = this.getState('items');
+                items.push(todo);
+                this.setState('items', items);
+            },
+            onClearList: function(todo) {
+                this.setState('items', []);
+            }
+        });
+
+        // UI description:
+        var TodosView = React.createClass({
+            mixins: [todosStore.mixin()],
+            addTodo: function() {
+                var node = this.refs['msg'].getDOMNode();
+                this.store.triggerAction('addTodo', node.value);
+            },
+            clearTodos: function() {
+                this.store.triggerAction('clearList');
+            },
+            render: function() {
+                var todos = this.state.items.map(function(todo, key) {
+                    return React.createElement('li', {key:'todo-'+key}, todo);
+                });
+                return React.createElement('div', null, 
+                    React.createElement('ul', null, todos),
+                    React.createElement('input', {ref:'msg'}),
+                    React.createElement('button', {onClick:this.addTodo}, 'Add'),
+                    React.createElement('button', {onClick:this.clearTodos}, 'Clear List')
+                );
+            }
+        });
+
+        React.render(
+            React.createElement(TodosView),
+            document.getElementById('todos')
+        );
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 
 'use strict';
-var clone = require('clone');
+
 var subscribable = require('jqb-subscribable');
 var actionsUtils = require('./actions');
 var mixinsUtils = require('./mixins');
@@ -98,3 +98,7 @@ function buildState(initialState) {
         return initialState || {};
     }
 }
+
+var clone = function(o) {
+    return JSON.parse(JSON.stringify(o));
+};

@@ -77,7 +77,6 @@ gulp.task('dist', ['jshint'], function() {
         .pipe(gulp.dest('./'));
 });
 
-
 gulp.task('start', ['build'], function() {  
     gulp.watch(['./src/**'], ['build']);
 });
