@@ -69,19 +69,27 @@ describe('FluxoStore // extend via mixins', function() {
 
         it('beforeStateChange()', function(done) {
             var store = Fluxo.createStore(true, {
+                actions: ['run'],
+                onRun: function() {
+                    this.setState('a', 1);
+                },
                 mixins: [{
                     beforeStateChange: function() {
                         done();
                     }
                 }]
             });
-            store.setState('a', 1);
+            store.trigger('run');
         });
 
     });
 
     it('should pass arguments to a mixin callback', function(done) {
         var store = Fluxo.createStore(true, {
+            actions: ['run'],
+            onRun: function() {
+                this.setState('a', 1);
+            },
             mixins: [{
                 beforeStateChange: function(change) {
                     expect(change).to.have.property('a').that.equals(1);
@@ -89,11 +97,15 @@ describe('FluxoStore // extend via mixins', function() {
                 }
             }]
         });
-        store.setState('a', 1);
+        store.trigger('run');
     });
 
     it('should set a result for the run', function() {
         var store = Fluxo.createStore(true, {
+            actions: ['run'],
+            onRun: function() {
+                this.setState('a', 2);
+            },
             initialState: {'a':1},
             mixins: [{
                 beforeStateChange: function(change) {
@@ -101,7 +113,7 @@ describe('FluxoStore // extend via mixins', function() {
                 }
             }]
         });
-        store.setState('a', 2);
+        store.trigger('run');
         expect(store.getState()).to.deep.equal({'a':1});
     });
 
