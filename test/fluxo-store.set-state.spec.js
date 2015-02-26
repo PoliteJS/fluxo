@@ -7,14 +7,21 @@ describe('FluxoStore // setState()', function() {
 
     beforeEach(function() {
         store = Fluxo.createStore(true, {
+            actions: ['setSingle', 'setMany'],
             initialState: {
                 name: 'Marco'
+            },
+            onSetSingle: function(key, val) {
+                this.setState(key, val);
+            },
+            onSetMany: function(state) {
+                this.setState(state);
             }
         });
     });
 
     it('should change a single property identified by string', function() {
-        store.setState('name', 'Silvia');
+        store.trigger('setSingle', 'name', 'Silvia');
         expect(store.getState()).to.have.property('name').and.equal('Silvia');
     });
 
@@ -23,12 +30,14 @@ describe('FluxoStore // setState()', function() {
             name: 'Silvia',
             pet: 'Clody'
         };
-        store.setState(newState);
+        store.trigger('setMany', newState);
         expect(store.getState()).to.deep.equal(newState);
     });
 
     it('should be aborted via mixin', function() {
         var store = Fluxo.createStore(true, {
+            actions: ['setMany'],
+            onSetMany: function(state) {this.setState(state)},
             initialState: {a:1},
             mixins: [{
                 beforeStateChange: function() {
@@ -36,12 +45,14 @@ describe('FluxoStore // setState()', function() {
                 }
             }]
         });
-        store.setState({a:2});
+        store.trigger('setMany', {a:2});
         expect(store.getState()).to.deep.equal({a:1});
     });
 
     it('should modify the change via mixin', function() {
         var store = Fluxo.createStore(true, {
+            actions: ['setMany'],
+            onSetMany: function(state) {this.setState(state)},
             initialState: {a:1},
             mixins: [{
                 beforeStateChange: function(change) {
@@ -49,32 +60,36 @@ describe('FluxoStore // setState()', function() {
                 }
             }]
         });
-        store.setState({a:2});
+        store.trigger('setMany', {a:2});
         expect(store.getState()).to.have.property('foo').that.equals(123);
     });
 
     it('should not affect an unmodified property', function() {
         var store = Fluxo.createStore(true, {
+            actions: ['setMany'],
+            onSetMany: function(state) {this.setState(state)},
             initialState: {a:1},
         });
         var spy = sinon.spy();
         store.registerControllerView({
             setState: spy
         });
-        store.setState('a',1);
+        store.trigger('setMany', {a:1});
         expect(spy.calledOnce).to.be.true;
     });
 
     it('should compute the real required changes', function() {
         var spy = sinon.spy();
         var store = Fluxo.createStore(true, {
+            actions: ['setMany'],
+            onSetMany: function(state) {this.setState(state)},
             initialState: {a:1},
             init: function() {
                 this.emitter.on('state-changed', spy);
             }
         });
         
-        store.setState({'a':1,'b':2});
+        store.trigger('setMany', {'a':1,'b':2});
 
         expect(
             spy.withArgs(

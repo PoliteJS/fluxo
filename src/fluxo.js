@@ -18,6 +18,9 @@ exports.createStore = function(makeInstance, customApi) {
     };
 
     CustomStore.prototype = {
+        init: function() {
+            this.store.init.apply(this.store, arguments);
+        },
         dispose: function() {
             this.store.dispose();
         },

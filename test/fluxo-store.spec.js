@@ -49,6 +49,24 @@ describe('Fluxo', function() {
             expect(store.getState()).to.deep.equal(initialState); 
         });
 
+        it('should be able to unit test a singleton store', function() {
+            var spy;
+            var store = Fluxo.createStore(true, {
+                actions: ['run'],
+                init: function() {
+                    spy = sinon.spy();
+                },
+                onRun: function() {
+                    spy();
+                }
+            });
+            store.trigger('run');
+            store.dispose();
+            store.init();
+            store.trigger('run');
+            expect(spy.calledOnce).to.be.true;
+        });
+
     });
 
 });

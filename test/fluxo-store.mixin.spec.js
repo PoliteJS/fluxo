@@ -11,7 +11,11 @@ describe('FluxoStore // setState()', function() {
 
     beforeEach(function() {
         store = Fluxo.createStore(true, {
-            initialState: initialState
+            initialState: initialState,
+            actions: ['setString'],
+            onSetString: function(key, val) {
+                this.setState(key, val);
+            },
         });
     });
 
@@ -30,6 +34,7 @@ describe('FluxoStore // setState()', function() {
 
     it('should update the state', function() {
         var Element = React.createClass({
+            
             mixins: [store.mixin()],
             render: function() {
                 return React.createElement('i', null, this.state.name);
@@ -39,7 +44,7 @@ describe('FluxoStore // setState()', function() {
         var target = document.createElement('div');
         React.render(React.createElement(Element), target);
 
-        store.setState('name', 'Silvia');
+        store.trigger('setString', 'name', 'Silvia');
         expect(target.innerHTML).to.contain('Silvia');
     });
 
