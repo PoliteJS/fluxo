@@ -67,6 +67,29 @@ describe('Fluxo', function() {
             expect(spy.calledOnce).to.be.true;
         });
 
+        it('should dispose the state', function() {
+            var store = Fluxo.createStore(true, {
+                initialState: {
+                    name: 'marcopeg'
+                }
+            });
+            store.dispose();
+            expect(store.getState()).to.be.null;
+        });
+
+        it('should re-initialise the state', function() {
+            var initialState = {
+                name: 'marcopeg',
+                age: 34
+            };
+            var store = Fluxo.createStore(true, {
+                initialState:initialState
+            });
+            store.dispose();
+            store.init();
+            expect(store.getState()).to.deep.equal(initialState);
+        });
+
     });
 
 });

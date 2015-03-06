@@ -10,13 +10,14 @@ module.exports = FluxoStore;
 
 function FluxoStore(customApi) {
     this.customApi = buildCustomApi(customApi);
-    this.state = buildState(this.customApi.initialState);
+    this.state;
     this.emitter;
     this.actions = actionsUtils.build(this, this.customApi.actions);
     this.mixins = mixinsUtils.build(this, this.customApi.mixins);
 }
 
 FluxoStore.prototype.init = function() {
+    this.state = buildState(this.customApi.initialState);
     this.emitter = subscribable.create();
     actionsUtils.register(this, this.customApi);
     mixinsUtils.run(this, 'init');
@@ -28,6 +29,7 @@ FluxoStore.prototype.dispose = function() {
     mixinsUtils.run(this, 'dispose');
     this.customApi.dispose && this.customApi.dispose.apply(this, arguments);
     this.emitter.dispose();
+    this.state = null;
     return this;
 };
 
