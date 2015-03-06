@@ -99,4 +99,14 @@ describe('FluxoStore // Actions', function() {
         }
     });
 
+    it('should trigger a readable exception', function() {
+        var store = Fluxo.createStore(true);
+        try {
+            store.trigger('foo');   
+        } catch (e) {
+            expect(e.toString()).to.contain('foo');
+            expect(e.toString()).to.contain('not implemented');
+        }
+    });
+
 });

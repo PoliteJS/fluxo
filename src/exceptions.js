@@ -9,4 +9,7 @@ function ActionNotImplementedException(actionName) {
     this.name = 'ActionNotImplemented';
     this.actionName = actionName;
     this.message = 'action "' + actionName + '" not implemented by this store';
+    this.toString = function() {
+        return this.message;
+    };
 }
