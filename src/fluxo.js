@@ -3,6 +3,7 @@
 
 var FluxoStore = require('./store');
 var createStoreMixin = require('./mixin');
+var mockMixin = require('./mock');
 
 exports.createStore = function(makeInstance, customApi) {
 
@@ -45,5 +46,10 @@ exports.createStore = function(makeInstance, customApi) {
         return CustomStore;
     }
 };
+
+
+
+// Mock Mixin
+exports.mockMixin = mockMixin;
 
 
