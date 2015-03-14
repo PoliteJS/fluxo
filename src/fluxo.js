@@ -37,6 +37,12 @@ exports.createStore = function(makeInstance, customApi) {
         },
         registerControllerView: function(view) {
             this.store.registerControllerView(view);
+        },
+        mock: function(fixture) {
+            this.store.mock(fixture);
+        },
+        restore: function() {
+            this.store.restore();
         }
     };
 
