@@ -69,6 +69,7 @@ FluxoStore.prototype.setState = function(prop, val) {
     }
 
     if (hadChanged) {
+        mixinsUtils.run(this, 'afterStateChange', this.state, changes, props);
         return this.emitter.emit('state-changed', this.state, changes, props);
     }
 
