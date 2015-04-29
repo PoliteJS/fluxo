@@ -29,7 +29,6 @@ exports.createStore = function(makeInstance, customApi) {
             return this.store.getState.apply(this.store, arguments);
         },
         setState: function() {
-            console.warn('this is going to be thrown away very soon!');
             this.store.setState.apply(this.store, arguments);
         },
         trigger: function() {
