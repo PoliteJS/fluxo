@@ -8,13 +8,17 @@
 module.exports = createMixin;
 
 function createMixin(store) {
+    var ticket;
     return {
         getInitialState: function() {
             return store.getState();
         },
         componentWillMount: function() {
             this.store = store;
-            this.store.registerControllerView(this);
+            ticket = this.store.registerControllerView(this);
+        },
+        componentWillUnmount: function() {
+            ticket.dispose();
         }
     };
 }

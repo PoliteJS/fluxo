@@ -78,7 +78,7 @@ FluxoStore.prototype.setState = function(prop, val) {
 
 FluxoStore.prototype.registerControllerView = function(controllerView) {
     controllerView.setState(this.getState());
-    this.emitter.on('^state-changed$', function(newState) {
+    return this.emitter.on('^state-changed$', function(newState) {
         controllerView.setState(newState);
     });
 };
